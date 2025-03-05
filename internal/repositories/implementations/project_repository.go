@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"log"
 	"logarithm/db"
+	"logarithm/internal/dto"
 	"logarithm/internal/models"
 )
 
@@ -39,7 +40,7 @@ func (repository *projectRepository) GetAll() []models.Project {
 	return projects
 }
 
-func (repository *projectRepository) Create(project models.ProjectInsertDTO) (models.Project, error) {
+func (repository *projectRepository) Create(project dto.ProjectInsertDTO) (models.Project, error) {
 	insertedProject := models.Project{}
 
 	query := `INSERT INTO project (name, allowed_origin) VALUES ($1, $2) RETURNING id, name, allowed_origin;`
@@ -52,7 +53,7 @@ func (repository *projectRepository) Create(project models.ProjectInsertDTO) (mo
 	return insertedProject, nil
 }
 
-func (repository *projectRepository) Update(projectId string, project models.ProjectUpdateDTO) (models.Project, error) {
+func (repository *projectRepository) Update(projectId string, project dto.ProjectUpdateDTO) (models.Project, error) {
 	updatedProject := models.Project{}
 
 	query := `UPDATE project SET 

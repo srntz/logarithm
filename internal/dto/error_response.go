@@ -1,4 +1,4 @@
-package responses
+package dto
 
 type errorResponse struct {
 	Error struct {

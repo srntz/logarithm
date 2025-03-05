@@ -1,4 +1,4 @@
-package responses
+package dto
 
 type successResponse[T any] struct {
 	Data T `json:"data"`
