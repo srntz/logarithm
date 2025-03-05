@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  logarithm_db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+      POSTGRES_DB: logarithm_db
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "postgres", "-d", "logarithm_db" ]
+      interval: 3s
+      retries: 10
+      start_period: 10s
+
+  logarithm_api:
+    image: srntz/logarithm_api
+    ports:
+      - "8080:8080"
+    environment:
+      DB_CONNECTION_URL: postgres://postgres:password@logarithm_db:5432/logarithm_db?sslmode=disable
+    depends_on:
+      logarithm_db:
+        condition: service_healthy
