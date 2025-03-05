@@ -1,7 +1,7 @@
 package implementations
 
 import (
-	"github.com/gin-gonic/gin"
+	"logarithm/internal/dto"
 	"logarithm/internal/models"
 	"logarithm/internal/repositories/interfaces"
 )
@@ -14,6 +14,14 @@ func NewProjectService(repository interfaces.IProjectRepository) *projectService
 	return &projectService{repository: repository}
 }
 
-func (s *projectService) GetAll(c *gin.Context) []models.Project {
+func (s *projectService) GetAll() []models.Project {
 	return s.repository.GetAll()
+}
+
+func (s *projectService) Create(project dto.ProjectInsertDTO) (models.Project, error) {
+	return s.repository.Create(project)
+}
+
+func (s *projectService) Update(projectId string, project dto.ProjectUpdateDTO) (models.Project, error) {
+	return s.repository.Update(projectId, project)
 }

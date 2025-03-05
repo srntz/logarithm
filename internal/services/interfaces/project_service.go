@@ -1,10 +1,12 @@
 package interfaces
 
 import (
-	"github.com/gin-gonic/gin"
+	"logarithm/internal/dto"
 	"logarithm/internal/models"
 )
 
 type IProjectService interface {
-	GetAll(c *gin.Context) []models.Project
+	GetAll() []models.Project
+	Create(project dto.ProjectInsertDTO) (models.Project, error)
+	Update(projectId string, project dto.ProjectUpdateDTO) (models.Project, error)
 }

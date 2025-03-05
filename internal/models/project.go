@@ -5,8 +5,3 @@ type Project struct {
 	Name          string `json:"name"`
 	AllowedOrigin string `json:"allowed_origin"`
 }
-
-type ProjectInsertDTO struct {
-	Name          string `json:"name"`
-	AllowedOrigin string `json:"allowed_origin"`
-}
