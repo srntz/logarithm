@@ -38,3 +38,34 @@ func (repository *projectRepository) GetAll() []models.Project {
 
 	return projects
 }
+
+func (repository *projectRepository) Create(project models.ProjectInsertDTO) (models.Project, error) {
+	insertedProject := models.Project{}
+
+	query := `INSERT INTO project (name, allowed_origin) VALUES ($1, $2) RETURNING id, name, allowed_origin;`
+
+	err := repository.db.QueryRow(query, project.Name, project.AllowedOrigin).Scan(&insertedProject.Id, &insertedProject.Name, &insertedProject.AllowedOrigin)
+	if err != nil {
+		return models.Project{}, err
+	}
+
+	return insertedProject, nil
+}
+
+func (repository *projectRepository) Update(projectId string, project models.ProjectUpdateDTO) (models.Project, error) {
+	updatedProject := models.Project{}
+
+	query := `UPDATE project SET 
+                   name = COALESCE($1, name),
+				   allowed_origin = COALESCE($2, allowed_origin)
+				WHERE id = $3
+				RETURNING id, name, allowed_origin;`
+
+	err := repository.db.QueryRow(query, project.Name, project.AllowedOrigin, projectId).Scan(&updatedProject.Id, &updatedProject.Name, &updatedProject.AllowedOrigin)
+	if err != nil {
+		return models.Project{}, err
+	}
+
+	return updatedProject, nil
+
+}

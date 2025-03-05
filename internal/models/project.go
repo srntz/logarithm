@@ -7,6 +7,11 @@ type Project struct {
 }
 
 type ProjectInsertDTO struct {
-	Name          string `json:"name"`
-	AllowedOrigin string `json:"allowed_origin"`
+	Name          string `json:"name" binding:"required"`
+	AllowedOrigin string `json:"allowed_origin" binding:"required"`
+}
+
+type ProjectUpdateDTO struct {
+	Name          *string `json:"name"`
+	AllowedOrigin *string `json:"allowed_origin"`
 }
