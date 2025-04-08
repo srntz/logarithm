@@ -14,7 +14,11 @@ func NewStudentService(repository interfaces.IStudentRepository) *studentService
 	return &studentService{repository: repository}
 }
 
-func (s *studentService) GetAll() []models.Student {
+func (s *studentService) Get(studentId string) (*models.Student, error) {
+	return s.repository.Get(studentId)
+}
+
+func (s *studentService) GetAll() ([]models.Student, error) {
 	return s.repository.GetAll()
 }
 

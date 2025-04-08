@@ -16,13 +16,26 @@ func NewStudentRepository() *studentRepository {
 	return &studentRepository{db: db.Connect()}
 }
 
-func (repository *studentRepository) GetAll() []models.Student {
+func (repository *studentRepository) Get(studentId string) (*models.Student, error) {
+	student := models.Student{}
+	query := `SELECT student_id, student_name, course_name, date FROM student WHERE student_id = $1`
+
+	err := repository.db.QueryRow(query, studentId).
+		Scan(&student.StudentId, &student.StudentName, &student.CourseName, &student.Date)
+	if err != nil {
+		return &models.Student{}, err
+	}
+
+	return &student, nil
+}
+
+func (repository *studentRepository) GetAll() ([]models.Student, error) {
 	students := []models.Student{}
 	query := `SELECT student_id, student_name, course_name, date FROM student;`
 
 	rows, err := repository.db.Query(query)
 	if err != nil {
-		log.Fatal(err)
+		return []models.Student{}, err
 	}
 	defer rows.Close()
 
@@ -37,7 +50,7 @@ func (repository *studentRepository) GetAll() []models.Student {
 		students = append(students, student)
 	}
 
-	return students
+	return students, nil
 }
 
 func (repository *studentRepository) Create(student models.Student) (models.Student, error) {

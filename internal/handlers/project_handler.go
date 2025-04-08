@@ -8,6 +8,7 @@ import (
 	"logarithm/internal/dto"
 	"logarithm/internal/models"
 	"logarithm/internal/services/interfaces"
+	"net/http"
 )
 
 type ProjectHandler struct {
@@ -19,13 +20,31 @@ func (handler *ProjectHandler) RegisterProjectsGroup() {
 	group := handler.routerGroup.Group("/students")
 
 	group.GET("", handler.getAll)
+	group.GET("/:id", handler.get)
 	group.POST("", handler.create)
 	group.PUT("/:id", handler.update)
 	group.DELETE("/:id", handler.delete)
 }
 
 func (handler *ProjectHandler) getAll(context *gin.Context) {
-	context.JSON(200, handler.service.GetAll())
+	students, err := handler.service.GetAll()
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, dto.NewErrorResponse(http.StatusInternalServerError, err.Error()))
+	}
+
+	context.JSON(200, dto.NewSuccessResponse(students))
+}
+
+func (handler *ProjectHandler) get(context *gin.Context) {
+	studentId := context.Param("id")
+
+	student, err := handler.service.Get(studentId)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, dto.NewErrorResponse(http.StatusInternalServerError, err.Error()))
+		return
+	}
+
+	context.JSON(200, dto.NewSuccessResponse(student))
 }
 
 func (handler *ProjectHandler) create(context *gin.Context) {
