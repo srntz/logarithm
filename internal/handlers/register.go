@@ -7,6 +7,6 @@ import (
 )
 
 func Register(r *gin.RouterGroup) {
-	projectsHandler := ProjectHandler{routerGroup: r, service: services.NewProjectService(repositories.NewProjectRepository())}
+	projectsHandler := ProjectHandler{routerGroup: r, service: services.NewStudentService(repositories.NewStudentRepository())}
 	projectsHandler.RegisterProjectsGroup()
 }

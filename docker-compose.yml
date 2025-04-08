@@ -14,9 +14,11 @@ services:
       start_period: 10s
 
   logarithm_api:
-    image: srntz/logarithm_api
+    image: srntz/logarithm-api
     ports:
       - "8080:8080"
+    cap_add:
+      - SYS_NICE
     environment:
       DB_CONNECTION_URL: postgres://postgres:password@logarithm_db:5432/logarithm_db?sslmode=disable
     depends_on:

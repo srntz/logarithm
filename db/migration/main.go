@@ -5,14 +5,14 @@ import (
 	"fmt"
 	"log"
 	"logarithm/db"
-	"logarithm/internal/models"
+	"logarithm/internal/dto"
 )
 
-var projects = []models.ProjectInsertDTO{
+var projects = []dto.ProjectInsertDTO{
 	{"Project 1", "http://example.com"},
 }
 
-var errors = []models.ErrorInsertDTO{
+var errors = []dto.ErrorInsertDTO{
 	{"", "InternalServerError", "Error: Index out of bounds", "stack_trace", "http://localhost:9999", ""},
 	{"", "InternalServerError", "Error: Integer overflow", "stack_trace", "http://localhost:9999", ""},
 }
@@ -62,7 +62,7 @@ func loadSchema() {
 	}
 }
 
-func loadProjects(project *models.ProjectInsertDTO, errors []models.ErrorInsertDTO) {
+func loadProjects(project *dto.ProjectInsertDTO, errors []dto.ErrorInsertDTO) {
 	projectQuery := `INSERT INTO project (name, allowed_origin) VALUES ($1, $2) RETURNING id;`
 	errorQuery := `INSERT INTO error (project_id, type, message, stack_trace, request_url, metadata) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;`
 
