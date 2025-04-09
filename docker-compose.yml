@@ -1,26 +1,26 @@
 version: "3.9"
 
 services:
-  logarithm_db:
+  docker_project_db:
     image: postgres
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: postgres
-      POSTGRES_DB: logarithm_db
+      POSTGRES_DB: studentdb
     healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "postgres", "-d", "logarithm_db" ]
+      test: [ "CMD", "pg_isready", "-U", "postgres", "-d", "studentdb" ]
       interval: 3s
       retries: 10
       start_period: 10s
 
-  logarithm_api:
-    image: srntz/logarithm-api
+  student_restful_api:
+    image: student_restful_api
     ports:
       - "8080:8080"
     cap_add:
       - SYS_NICE
     environment:
-      DB_CONNECTION_URL: postgres://postgres:password@logarithm_db:5432/logarithm_db?sslmode=disable
+      DB_CONNECTION_URL: postgres://postgres:password@docker_project_db:5432/studentdb?sslmode=disable
     depends_on:
-      logarithm_db:
+      docker_project_db:
         condition: service_healthy
