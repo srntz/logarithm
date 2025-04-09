@@ -23,7 +23,7 @@ func (repository *studentRepository) Get(studentId string) (*models.Student, err
 	err := repository.db.QueryRow(query, studentId).
 		Scan(&student.StudentId, &student.StudentName, &student.CourseName, &student.Date)
 	if err != nil {
-		return &models.Student{}, err
+		return nil, err
 	}
 
 	return &student, nil

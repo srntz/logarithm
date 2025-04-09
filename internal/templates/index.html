@@ -1,13 +1,98 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Student API</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students API</title>
 </head>
 <body>
-    <p>Student API</p>
+<h2>Add New Student</h2>
+<form id="student-add-form">
+    <input type="text" name="studentId" placeholder="Student ID" style="display: block;" required>
+    <input type="text" name="studentName" placeholder="Full Name" style="display: block;" required>
+    <input type="text" name="courseName" placeholder="Course Name" style="display: block;" required>
+    <input type="text" name="date" placeholder="dd/mm/yyyy" style="display: block;" required>
+    <button type="submit">Add new student</button>
+</form>
+<pre id="student-add-result"></pre>
+
+<h2>Get Student by ID</h2>
+<form id="student-get-form">
+    <input type="text" name="studentId" placeholder="Student ID" style="display: block;" required>
+    <button type="submit">Get student</button>
+</form>
+<pre id="student-get-result"></pre>
+
+
+<h2>Update Student</h2>
+<form id="student-update-form">
+    <input type="text" name="studentId" placeholder="Student ID" style="display: block;" required>
+    <input type="text" name="studentName" placeholder="New student name" style="display: block;" required>
+    <input type="text" name="courseName" placeholder="New course name" style="display: block;" required>
+    <button type="submit">Update student</button>
+</form>
+<pre id="student-update-result"></pre>
+
+<h2>Delete Student</h2>
+<form id="student-delete-form">
+    <input type="text" name="studentId" placeholder="Student ID" style="display: block;" required>
+    <button type="submit">Delete student</button>
+</form>
+<pre id="student-delete-result"></pre>
 </body>
+<script>
+  document.getElementById("student-update-form").addEventListener("submit", function (e) {
+    e.preventDefault()
+
+    const data = new FormData(this)
+
+    fetch(`/api/v1/students/${data.get("studentId")}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        studentName: data.get("studentName"),
+        courseName: data.get("courseName")
+      })
+    }).then((res) => {
+      return res.json()
+    }).then(data => {
+      const el = document.getElementById("student-update-result")
+
+      el.textContent = JSON.stringify(data, null, 2)
+    })
+  })
+  document.getElementById("student-get-form").addEventListener("submit", function (e) {
+    e.preventDefault()
+
+    const data = new FormData(this)
+
+    fetch(`/api/v1/students/${data.get("studentId")}`, {
+      method: "GET"
+    }).then(res => res.json()).then(data => {
+      document.getElementById("student-get-result").textContent = JSON.stringify(data, null, 2)
+    })
+  })
+  document.getElementById("student-add-form").addEventListener("submit", function (e) {
+    e.preventDefault()
+
+    const data = new FormData(this)
+
+    fetch(`/api/v1/students`, {
+      method: "POST",
+      body: JSON.stringify(Object.fromEntries(data.entries()))
+    }).then(res => res.json()).then(data => {
+      document.getElementById("student-add-result").textContent = JSON.stringify(data, null, 2)
+    })
+  })
+  document.getElementById("student-delete-form").addEventListener("submit", function (e) {
+    e.preventDefault()
+
+    const data = new FormData(this)
+
+    fetch(`/api/v1/students/${data.get("studentId")}`, {
+      method: "DELETE"
+    }).then(res => res.json()).then(data => {
+      document.getElementById("student-delete-result").textContent = JSON.stringify(data, null, 2)
+    })
+  })
+</script>
 </html>
